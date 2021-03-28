@@ -1,6 +1,7 @@
 const ValorNaoSuportado = require('./erros/ValorNaoSuportado')
 
 class Serializador {
+
     serializar(dados) {
         // Verifica se o conteudo recebido é do tipo JSON
         if (this.contentType === 'application/json') {
@@ -47,17 +48,30 @@ class Serializador {
     } 
 }
 
-class SerializadorFornecedor extends Serializador{
-    constructor(contentType) {
+class SerializadorFornecedor extends Serializador {
+
+    // Recebe o tipo de conteudo e os campos extras a serem retornados
+    constructor(contentType, camposExtras) {
         super()
         this.contentType = contentType  
-        // Campos que podem ser retornados
-        this.camposPublicos = ['id', 'empresa', 'categoria']
+        // Concatena os campos que podem ser retornados com os campos extras (caso não exista, usa uma lista vazia)
+        this.camposPublicos = ['id', 'empresa', 'categoria'].concat(camposExtras || [])
+    }
+}
+
+// Serializa os objetos de error
+class SerializadorErro extends Serializador {
+
+    constructor(contentType, camposExtras) {
+        super()
+        this.contentType = contentType
+        this.camposPublicos = ['id', 'mensagem'].concat(camposExtras || [])
     }
 }
 
 module.exports = {
     Serializador: Serializador,
     SerializadorFornecedor: SerializadorFornecedor,
+    SerializadorErro: SerializadorErro,
     formatosAceitos: ['application/json']
 }
