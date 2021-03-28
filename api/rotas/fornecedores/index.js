@@ -14,7 +14,8 @@ roteador.get('/', async (req, res) => {
 
 // Rota para cadastro de fornecedores
 roteador.post('/', async (req, res) => {
-    // Capturando os dados enviados
+    try {
+        // Capturando os dados enviados
     const dadosRecebidos = req.body
 
     const fornecedor = new Fornecedor(dadosRecebidos)
@@ -26,6 +27,13 @@ roteador.post('/', async (req, res) => {
     res.send(
         JSON.stringify(fornecedor)
     )
+    } catch (error) {
+        res.send(
+            JSON.stringify({
+                mensagem: error.message
+            })
+        )
+    }
 })
 
 // Rota para listar um unico fornecedor
@@ -49,31 +57,51 @@ roteador.get('/:idFornecedor',async (req, res) => {
             })
         )
     }
+})
 
-    // Rota para alterar um fornecedor
-    roteador.put('/:idFornecedor', async (req, res) => {
-        try {
-            // Capturando o id e os dados recebidos
-            const id = req.params.idFornecedor
-            const dadosRecebidos = req.body
-            // Mesclando os dados recebidos com o id em um só objeto
-            const dados = Object.assign({}, dadosRecebidos, { id: id })
+// Rota para alterar um fornecedor
+roteador.put('/:idFornecedor', async (req, res) => {
+    try {
+        // Capturando o id e os dados recebidos
+        const id = req.params.idFornecedor
+        const dadosRecebidos = req.body
+        // Mesclando os dados recebidos com o id em um só objeto
+        const dados = Object.assign({}, dadosRecebidos, { id: id })
 
-            const fornecedor = new Fornecedor(dados)
+        const fornecedor = new Fornecedor(dados)
 
-            // Espera pelo metodo atualizar ser executado
-            await fornecedor.atualizar()
+        // Espera pelo metodo atualizar ser executado
+        await fornecedor.atualizar()
 
-            // Encerra a requisição
-            res.end()
-        } catch (error) {
-            res.send(
-                JSON.stringify({
-                    mensagem: error.message
-                })
-            )
-        }
-    })
+        // Encerra a requisição
+        res.end()
+    } catch (error) {
+        res.send(
+            JSON.stringify({
+                mensagem: error.message
+            })
+        )
+    }
+})
+
+// Rota para deletar um fornecedor
+roteador.delete('/:idFornecedor', async (req, res) => {
+    try {
+        // Capturando o id 
+        const id = req.params.idFornecedor
+
+        // Esperando pelo metodo remover ser executado
+        await TabelaFornecedor.remover(id)
+
+        // Encerrando requisição
+        res.end()
+    } catch (error) {
+        res.send(
+            JSON.stringify({
+                mensagem: error.message
+            })
+        )
+    }
 })
 
 module.exports = roteador
