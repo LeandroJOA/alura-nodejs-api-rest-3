@@ -31,5 +31,18 @@ module.exports = {
                 where: { id: id }
             }
         )
+    },
+    async remover(id) {
+        // Deleta o fornecedor com mesmo id
+        const deletado = await Modelo.destroy({
+            where: { id: id }
+        })
+
+        // Verifica se o fornecedor foi deletado
+        if (!deletado) {
+            throw new Error('ERROR! Fornecedor não encontrado')
+        }
+
+        return deletado
     }
 }
