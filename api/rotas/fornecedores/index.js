@@ -2,16 +2,24 @@ const roteador = require('express').Router()
 
 const TabelaFornecedor = require('./TabelaFornecedor')
 const Fornecedor = require('./Fornecedor')
+const SerializadorFornecedor = require('../../Serializador').SerializadorFornecedor
 
 // Rota para listar todos os fornecedores 
 roteador.get('/', async (req, res) => {
     // Espera o metodo listar ser realizado
     const resultados = await TabelaFornecedor.listar()
 
+    // Status OK
     res.status(200)
+
+    // Instanciando nosso serializador e enviando o tipo de conteudo usado
+    const serializador = new SerializadorFornecedor(
+        res.getHeader('Content-Type')
+    )
+
     // Retorna os resultados como JSON
     res.send(
-        JSON.stringify(resultados)
+        serializador.serializar(resultados)
     )
 })
 
@@ -26,10 +34,17 @@ roteador.post('/', async (req, res, proximo) => {
     //Espera o metodo criar ser executado
     await fornecedor.criar()
     
+    // Status Created
     res.status(201)
+
+    // Instanciando nosso serializador e enviando o tipo de conteudo usado
+    const serializador = new SerializadorFornecedor(
+        res.getHeader('Content-Type')
+    )
+
     // Respondendo com os dados adicionados
     res.send(
-        JSON.stringify(fornecedor)
+        serializador.serializar(fornecedor)
     )
     } catch (error) {
         proximo(error)
@@ -47,9 +62,15 @@ roteador.get('/:idFornecedor',async (req, res, proximo) => {
         // Espera o metodo carregar ser executado
         await fornecedor.carregar()
 
+        // Status OK
         res.status(200)
+
+        // Instanciando nosso serializador e enviando o tipo de conteudo usado
+        const serializador = new SerializadorFornecedor(
+            res.getHeader('Content-Type')
+        )
         res.send(
-            JSON.stringify(fornecedor)
+            serializador.serializar(fornecedor)
         )
     } catch (error) {
         proximo(error)
@@ -70,6 +91,7 @@ roteador.put('/:idFornecedor', async (req, res, proximo) => {
         // Espera pelo metodo atualizar ser executado
         await fornecedor.atualizar()
 
+        // Status No Content
         res.status(204)
         // Encerra a requisição
         res.end()
@@ -87,6 +109,7 @@ roteador.delete('/:idFornecedor', async (req, res, proximo) => {
         // Esperando pelo metodo remover ser executado
         await TabelaFornecedor.remover(id)
 
+        // Status No Content
         res.status(204)
         // Encerrando requisição
         res.end()
