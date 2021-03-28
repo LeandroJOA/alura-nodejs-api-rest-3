@@ -12,6 +12,18 @@ class Fornecedor {
     }
 
     async criar() {
+        // Campos que a serem verificados
+        const campos = ['empresa', 'email', 'categoria']
+
+        // Verifica se os campos enviados são do tipo String e não estão vazios
+        campos.forEach((campo) => {
+            const valor = this[campo]
+
+            if (typeof valor !== 'string' || valor.length === 0) {
+                throw new Error(`ERROR! O campo '${campo}' é invalido`)
+            }
+        })
+
         const resultado = await TabelaFornecedor.inserir({
             empresa: this.empresa,
             email: this.email,
@@ -40,23 +52,23 @@ class Fornecedor {
 
         // Campos que a serem verificados
         const campos = ['empresa', 'email', 'categoria']
-        const dadosParaAtualizar = {}
+        const dados = {}
 
         // Verifica se os campos enviados são do tipo String e não estão vazios
         campos.forEach((campo) => {
             const valor = this[campo]
 
             if (typeof valor === 'string' && valor.length > 0) {
-                dadosParaAtualizar[campo] = valor
+                dados[campo] = valor
             }
         })
 
         // Lnaça um erro caso todos os dados estejam vazio ou são de tipo invalido
-        if (Object.keys(dadosParaAtualizar).length === 0) {
+        if (Object.keys(dados).length === 0) {
             throw new Error('ERROR! Não foram fornecidos dados para atualizar')
         }
 
-        await TabelaFornecedor.atualizar(this.id, dadosParaAtualizar)
+        await TabelaFornecedor.atualizar(this.id, dados)
     }
 }
 
