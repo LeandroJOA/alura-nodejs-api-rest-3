@@ -33,6 +33,31 @@ class Fornecedor {
         this.dataAtualizacao = encontrado.dataAtualizacao
         this.versao = encontrado.versao
     }
+
+    async atualizar() {
+        // Veriricando se o fornecedor a ser altera existe
+        await TabelaFornecedor.pegarPorId(this.id)
+
+        // Campos que a serem verificados
+        const campos = ['empresa', 'email', 'categoria']
+        const dadosParaAtualizar = {}
+
+        // Verifica se os campos enviados são do tipo String e não estão vazios
+        campos.forEach((campo) => {
+            const valor = this[campo]
+
+            if (typeof valor === 'string' && valor.length > 0) {
+                dadosParaAtualizar[campo] = valor
+            }
+        })
+
+        // Lnaça um erro caso todos os dados estejam vazio ou são de tipo invalido
+        if (Object.keys(dadosParaAtualizar).length === 0) {
+            throw new Error('ERROR! Não foram fornecidos dados para atualizar')
+        }
+
+        await TabelaFornecedor.atualizar(this.id, dadosParaAtualizar)
+    }
 }
 
 module.exports = Fornecedor
