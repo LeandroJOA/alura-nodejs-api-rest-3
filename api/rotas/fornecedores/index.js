@@ -6,6 +6,8 @@ const Fornecedor = require('./Fornecedor')
 roteador.get('/', async (req, res) => {
     // Espera o metodo listar ser realizado
     const resultados = await TabelaFornecedor.listar()
+
+    res.status(200)
     // Retorna os resultados como JSON
     res.send(
         JSON.stringify(resultados)
@@ -23,6 +25,7 @@ roteador.post('/', async (req, res) => {
     //Espera o metodo criar ser executado
     await fornecedor.criar()
     
+    res.status(201)
     // Respondendo com os dados adicionados
     res.send(
         JSON.stringify(fornecedor)
@@ -47,6 +50,7 @@ roteador.get('/:idFornecedor',async (req, res) => {
         // Espera o metodo carregar ser executado
         await fornecedor.carregar()
 
+        res.status(200)
         res.send(
             JSON.stringify(fornecedor)
         )
@@ -73,6 +77,7 @@ roteador.put('/:idFornecedor', async (req, res) => {
         // Espera pelo metodo atualizar ser executado
         await fornecedor.atualizar()
 
+        res.status(204)
         // Encerra a requisição
         res.end()
     } catch (error) {
@@ -93,6 +98,7 @@ roteador.delete('/:idFornecedor', async (req, res) => {
         // Esperando pelo metodo remover ser executado
         await TabelaFornecedor.remover(id)
 
+        res.status(204)
         // Encerrando requisição
         res.end()
     } catch (error) {
