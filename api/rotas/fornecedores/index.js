@@ -1,6 +1,8 @@
 const roteador = require('express').Router()
+
 const TabelaFornecedor = require('./TabelaFornecedor')
 const Fornecedor = require('./Fornecedor')
+const NaoEncontrado = require('../../erros/NaoEncontrado')
 
 // Rota para listar todos os fornecedores 
 roteador.get('/', async (req, res) => {
@@ -66,7 +68,7 @@ roteador.get('/:idFornecedor',async (req, res) => {
 })
 
 // Rota para alterar um fornecedor
-roteador.put('/:idFornecedor', async (req, res) => {
+roteador.put('/:idFornecedor', async (req, res, proximo) => {
     try {
         // Capturando o id e os dados recebidos
         const id = req.params.idFornecedor
@@ -83,12 +85,7 @@ roteador.put('/:idFornecedor', async (req, res) => {
         // Encerra a requisição
         res.end()
     } catch (error) {
-        res.status(400)
-        res.send(
-            JSON.stringify({
-                mensagem: error.message
-            })
-        )
+        proximo(error)
     }
 })
 

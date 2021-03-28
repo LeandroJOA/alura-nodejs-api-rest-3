@@ -1,4 +1,5 @@
 const Modelo = require('./ModeloTabelaFornecedor')
+const NaoEncontrado = require('../../erros/NaoEncontrado')
 
 // Traduzindo o metodo findAll do Sequelize
 module.exports = {
@@ -18,7 +19,7 @@ module.exports = {
 
         // Caso não tenha sido encontrado
         if (!encontrado) {
-            throw new Error('ERROR! Fornecedor não encontrado')
+            throw new NaoEncontrado()
         }
 
         return encontrado
