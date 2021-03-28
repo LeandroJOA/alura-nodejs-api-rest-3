@@ -2,7 +2,6 @@ const roteador = require('express').Router()
 
 const TabelaFornecedor = require('./TabelaFornecedor')
 const Fornecedor = require('./Fornecedor')
-const NaoEncontrado = require('../../erros/NaoEncontrado')
 
 // Rota para listar todos os fornecedores 
 roteador.get('/', async (req, res) => {
@@ -17,7 +16,7 @@ roteador.get('/', async (req, res) => {
 })
 
 // Rota para cadastro de fornecedores
-roteador.post('/', async (req, res) => {
+roteador.post('/', async (req, res, proximo) => {
     try {
         // Capturando os dados enviados
     const dadosRecebidos = req.body
@@ -33,17 +32,12 @@ roteador.post('/', async (req, res) => {
         JSON.stringify(fornecedor)
     )
     } catch (error) {
-        res.status(400)
-        res.send(
-            JSON.stringify({
-                mensagem: error.message
-            })
-        )
+        proximo(error)
     }
 })
 
 // Rota para listar um unico fornecedor
-roteador.get('/:idFornecedor',async (req, res) => {
+roteador.get('/:idFornecedor',async (req, res, proximo) => {
     try {
         // Capturando o parametro de id
         const id = req.params.idFornecedor
@@ -58,12 +52,7 @@ roteador.get('/:idFornecedor',async (req, res) => {
             JSON.stringify(fornecedor)
         )
     } catch (error) {
-        res.status(404)
-        res.send(
-            JSON.stringify({
-                mensagem: error.message
-            })
-        )
+        proximo(error)
     }
 })
 
@@ -90,7 +79,7 @@ roteador.put('/:idFornecedor', async (req, res, proximo) => {
 })
 
 // Rota para deletar um fornecedor
-roteador.delete('/:idFornecedor', async (req, res) => {
+roteador.delete('/:idFornecedor', async (req, res, proximo) => {
     try {
         // Capturando o id 
         const id = req.params.idFornecedor
@@ -102,12 +91,7 @@ roteador.delete('/:idFornecedor', async (req, res) => {
         // Encerrando requisição
         res.end()
     } catch (error) {
-        res.status(404)
-        res.send(
-            JSON.stringify({
-                mensagem: error.message
-            })
-        )
+        proximo(error)
     }
 })
 
