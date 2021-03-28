@@ -1,6 +1,6 @@
 const ModeloTabela = require('../rotas/fornecedores/ModeloTabelaFornecedor')
 
-// Utilizando Promises
+// Utilizando Promises para criar a tabela fornecedor
 ModeloTabela
     .sync()
     // Caso o metodo seja bem sucedido
