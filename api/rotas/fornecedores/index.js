@@ -16,6 +16,7 @@ roteador.get('/', async (req, res) => {
 roteador.post('/', async (req, res) => {
     // Capturando os dados enviados
     const dadosRecebidos = req.body
+
     const fornecedor = new Fornecedor(dadosRecebidos)
 
     //Espera o metodo criar ser executado
@@ -32,6 +33,7 @@ roteador.get('/:idFornecedor',async (req, res) => {
     try {
         // Capturando o parametro de id
         const id = req.params.idFornecedor
+
         const fornecedor = new Fornecedor({ id: id })
 
         // Espera o metodo carregar ser executado
@@ -47,6 +49,31 @@ roteador.get('/:idFornecedor',async (req, res) => {
             })
         )
     }
+
+    // Rota para alterar um fornecedor
+    roteador.put('/:idFornecedor', async (req, res) => {
+        try {
+            // Capturando o id e os dados recebidos
+            const id = req.params.idFornecedor
+            const dadosRecebidos = req.body
+            // Mesclando os dados recebidos com o id em um só objeto
+            const dados = Object.assign({}, dadosRecebidos, { id: id })
+
+            const fornecedor = new Fornecedor(dados)
+
+            // Espera pelo metodo atualizar ser executado
+            await fornecedor.atualizar()
+
+            // Encerra a requisição
+            res.end()
+        } catch (error) {
+            res.send(
+                JSON.stringify({
+                    mensagem: error.message
+                })
+            )
+        }
+    })
 })
 
 module.exports = roteador
