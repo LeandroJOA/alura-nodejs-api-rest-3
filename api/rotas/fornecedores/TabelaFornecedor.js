@@ -41,7 +41,7 @@ module.exports = {
 
         // Verifica se o fornecedor foi deletado
         if (!deletado) {
-            throw new Error('ERROR! Fornecedor não encontrado')
+            throw new NaoEncontrado()
         }
 
         return deletado
